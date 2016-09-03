@@ -25,28 +25,24 @@
 	
 	<searchPath name="teneo.test.plugins">
 		<provider componentTypes="osgi.bundle" readerType="git" source="true">
-			<property key="git.remote.uri" value="git://git.eclipse.org/gitroot/teneo/org.eclipse.emf.teneo.git/"/>
 			<uri format="{0},build/{1}">
 				<bc:propertyRef key="gitPath"/>
 				<bc:propertyRef key="buckminster.component"/>
 			</uri>
 		</provider>
 		<provider componentTypes="osgi.bundle" readerType="git" source="true">
-			<property key="git.remote.uri" value="git://git.eclipse.org/gitroot/teneo/org.eclipse.emf.teneo.git/"/>
 			<uri format="{0},core/{1}">
 				<bc:propertyRef key="gitPath"/>
 				<bc:propertyRef key="buckminster.component"/>
 			</uri>
 		</provider>
 		<provider componentTypes="osgi.bundle" readerType="git" source="true">
-			<property key="git.remote.uri" value="git://git.eclipse.org/gitroot/teneo/org.eclipse.emf.teneo.git/"/>
 			<uri format="{0},hibernate/{1}">
 				<bc:propertyRef key="gitPath"/>
 				<bc:propertyRef key="buckminster.component"/>
 			</uri>
 		</provider>
 		<provider componentTypes="osgi.bundle" readerType="git" source="true">
-			<property key="git.remote.uri" value="git://git.eclipse.org/gitroot/teneo/org.eclipse.emf.teneo.git/"/>
 			<uri format="{0},tests/{1}">
 				<bc:propertyRef key="gitPath"/>
 				<bc:propertyRef key="buckminster.component"/>
@@ -64,6 +60,36 @@
   	</searchPath>
 
   	<searchPath name="target.platform">
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Mars)">
+      		<uri format="{0}/releases/mars">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Mars)">
+      		<uri format="{0}/eclipse/updates/4.5">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Luna)">
+      		<uri format="{0}/releases/luna">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Luna)">
+      		<uri format="{0}/eclipse/updates/4.4">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Kepler)">
+      		<uri format="{0}/releases/kepler">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Kepler)">
+      		<uri format="{0}/eclipse/updates/4.3">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
     	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Juno)">
       		<uri format="{0}/releases/juno">
 				<bc:propertyRef key="eclipse.download"/>
@@ -110,7 +136,7 @@
       		</uri>
     	</provider>
 		<provider readerType="p2" componentTypes="osgi.bundle" mutable="false" source="false">
-			<uri format="{0}/tools/orbit/downloads/drops/S20111018035124/repository/">
+			<uri format="{0}/tools/orbit/downloads/drops/R20140525021250/repository/">
 				<bc:propertyRef key="eclipse.download"/>
       		</uri>
 		</provider>

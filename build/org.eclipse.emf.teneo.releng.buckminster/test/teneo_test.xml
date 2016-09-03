@@ -71,7 +71,7 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		</buckminster>
 
 		<echo message="Running tests Hibernate" />
-		<buckminster command="emma" workspace="${workspacePath}">
+		<buckminster command="junit" workspace="${workspacePath}">
 			<cmdargs>
 				<arg value="-l" />
 				<arg value="org.eclipse.emf.teneo.hibernate.test/AllTests.launch" />
@@ -81,11 +81,18 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 				<arg value="${testResultsPath}/output/stdout.txt" />
 				<arg value="--stderr" />
 				<arg value="${testResultsPath}/output/stderr.txt" />
-				<arg value="--xml" />
-				<arg value="${testResultsPath}/output/hibernate-coverageReport.xml" />
 				<arg value="--flatXML"/>
 			</cmdargs>
 		</buckminster>
+
+		<!-- convert the xml to a format which can be read by junit report>
+		NOTE: not used anymore, the flatXML argument now takes care of this
+		<xslt in="${testResultsPath}/output/test-results-hibernate.xml" out="${testResultsPath}/xml/TESTS-hibernate.xml" style="convert-test-results.xsl">
+			<param name="timeStamp" expression="${buildTimeStamp}" />
+			<param name="testName" expression="Hibernate Tests" />
+			<param name="testPackage" expression="org.eclipse.emf.teneo.hibernate.tests" />
+		</xslt-->
+
 	</target>
 
 	<target name="init.build.properties">
