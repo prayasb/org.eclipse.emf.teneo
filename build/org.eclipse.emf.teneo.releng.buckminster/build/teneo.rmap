@@ -14,31 +14,28 @@
 
  	<property key="build.type" mutable="true" value="Indigo"/>
  	<property key="eclipse.download" value="http://download.eclipse.org"/>
- 
+
 	<searchPath name="teneo.plugins">
 		<provider componentTypes="osgi.bundle" readerType="git" source="true">
-			<property key="git.remote.uri" value="git://git.eclipse.org/gitroot/teneo/org.eclipse.emf.teneo.git/"/>
 			<uri format="{0},build/{1}">
 				<bc:propertyRef key="gitPath"/>
 				<bc:propertyRef key="buckminster.component"/>
 			</uri>
 		</provider>
 		<provider componentTypes="osgi.bundle" readerType="git" source="true">
-			<property key="git.remote.uri" value="git://git.eclipse.org/gitroot/teneo/org.eclipse.emf.teneo.git/"/>
 			<uri format="{0},core/{1}">
 				<bc:propertyRef key="gitPath"/>
 				<bc:propertyRef key="buckminster.component"/>
 			</uri>
 		</provider>
 		<provider componentTypes="osgi.bundle" readerType="git" source="true">
-			<property key="git.remote.uri" value="git://git.eclipse.org/gitroot/teneo/org.eclipse.emf.teneo.git/"/>
 			<uri format="{0},hibernate/{1}">
 				<bc:propertyRef key="gitPath"/>
 				<bc:propertyRef key="buckminster.component"/>
 			</uri>
 		</provider>
 	</searchPath>
-	
+
 	<searchPath name="teneo.features">
 		<provider componentTypes="eclipse.feature" readerType="git" source="true" mutable="false">
 			<uri format="{0},build/{1}-feature">
@@ -49,8 +46,23 @@
   	</searchPath>
 
   	<searchPath name="target.platform">
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Kepler)">
+      		<uri format="{0}/releases/kepler">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Kepler)">
+      		<uri format="{0}/eclipse/updates/4.3">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
     	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Juno)">
       		<uri format="{0}/releases/juno">
+				<bc:propertyRef key="eclipse.download"/>
+      		</uri>
+    	</provider>
+    	<provider componentTypes="eclipse.feature,osgi.bundle" readerType="p2" source="false" mutable="false" resolutionFilter="(build.type=Juno)">
+      		<uri format="{0}/eclipse/updates/3.8">
 				<bc:propertyRef key="eclipse.download"/>
       		</uri>
     	</provider>
@@ -95,7 +107,7 @@
       		</uri>
     	</provider>
 		<provider readerType="p2" componentTypes="osgi.bundle" mutable="false" source="false">
-			<uri format="{0}/tools/orbit/downloads/drops/S20111018035124/repository/">
+			<uri format="{0}/tools/orbit/downloads/drops/S20130914154012/repository/">
 				<bc:propertyRef key="eclipse.download"/>
       		</uri>
 		</provider>
@@ -104,5 +116,5 @@
 	<locator searchPathRef="teneo.features" pattern="^org\.eclipse\.emf\.teneo([\.\-].+)?" failOnError="false"/>
 	<locator searchPathRef="teneo.plugins" pattern="^org\.eclipse\.emf\.teneo(\..+)?"/>
   	<locator searchPathRef="target.platform"/>
-	
+
 </rmap>
