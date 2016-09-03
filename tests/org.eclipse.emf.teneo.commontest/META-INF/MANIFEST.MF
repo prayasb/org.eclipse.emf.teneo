@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.name
 Bundle-SymbolicName: org.eclipse.emf.teneo.commontest
-Bundle-Version: 1.1.2.qualifier
+Bundle-Version: 1.2.1.qualifier
 Bundle-Vendor: %Plugin.providerName
 Bundle-Localization: plugin
 Require-Bundle: org.junit,
@@ -24,5 +24,5 @@ Export-Package:
  org.eclipse.emf.teneo.test.emf.schemaconstructs,
  org.eclipse.emf.teneo.test.issues,
  org.eclipse.emf.teneo.test.stores
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.apache.commons.logging;version="[1.0.0,2.0.0)"
