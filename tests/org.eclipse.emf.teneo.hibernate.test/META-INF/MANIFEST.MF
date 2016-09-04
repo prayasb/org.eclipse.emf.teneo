@@ -36,4 +36,4 @@ Import-Package: com.mysql.jdbc;version="[5.1.0,6.0.0)";resolution:=optional,
  org.hibernate.proxy;version="[3.6.0,4.0.0)";resolution:=optional,
  org.hibernate.type;version="[3.6.0,4.0.0)";resolution:=optional,
  org.hibernate.usertype;version="[3.6.0,4.0.0)";resolution:=optional,
- org.hsqldb;version="[1.8.0,2.0.0)";resolution:=optional
+ org.hsqldb;version="[1.8.0.0,2.0.0)"

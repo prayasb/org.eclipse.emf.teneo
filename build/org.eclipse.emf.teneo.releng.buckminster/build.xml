@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- 
+<!--
 Copyright (c) 2010 Cloudsmith Inc, Martin Taal (Doorn, The Netherlands) and others.
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
@@ -14,7 +14,7 @@ Some important parts have been copied from Buckminster's own
 build setup:
 http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/build.xml?root=Tools_BUCKMINSTER&view=markup
 -->
-<project default="build.and.test" name="Texo Builds">
+<project default="build.and.test" name="Teneo Builds">
 	<!-- load properties and set timestamp for the build -->
 	<property environment="env" />
 
@@ -52,7 +52,7 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<isset property="env.BUILDTYPE" />
 	</condition>
 
-	<condition property="teneo.version" value="${env.VERSION}" else="1.2.0">
+	<condition property="teneo.version" value="${env.VERSION}" else="1.2.1">
 		<isset property="env.VERSION" />
 	</condition>
 
@@ -93,8 +93,7 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<echo message="Building" />
 		<ant dir="${basedir}/build" antfile="teneo_build.xml" target="run" inheritRefs="true" />
 
-		<echo message="Testing" />
-		<ant dir="${basedir}/test" antfile="teneo_test.xml" target="run" inheritRefs="true" />
+		<antcall target="test" />
 		
 		<computeVersionQualifier directory="${rootPath}/output/org.eclipse.emf.teneo_${teneo.version}-osgi.bundle/jar" pattern="org.eclipse.emf.teneo*.jar"/>
 
@@ -107,6 +106,11 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<teneo.maven name="org.eclipse.emf.teneo.annotations"/>
 		<teneo.maven name="org.eclipse.emf.teneo.hibernate.mapper"/>
 		<teneo.maven name="org.eclipse.emf.teneo.hibernate"/>
+	</target>
+	
+	<target name="test">
+		<echo message="Testing" />
+		<ant dir="${basedir}/test" antfile="teneo_test.xml" target="run" inheritRefs="true" />
 	</target>
 
 	<target name="promote" depends="init.build.properties">
