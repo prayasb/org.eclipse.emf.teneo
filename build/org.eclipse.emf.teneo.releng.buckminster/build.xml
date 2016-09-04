@@ -24,6 +24,10 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 
 	<property file="buckminster.properties" />
 
+	<condition property="useRemote" value="${env.USE_REMOTE}" else="false">
+		<isset property="env.USE_REMOTE" />
+	</condition>
+
 	<condition property="hudsonWorkSpacePath" value="${env.WORKSPACE}" else="${basedir}/../../">
 		<isset property="env.WORKSPACE" />
 	</condition>
@@ -86,15 +90,15 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 	<property name="buckminster.temp.root" location="${rootPath}/temp" />
 
 	<import file="ant_common.xml" />
-	
+
 	<import file="ant_maven.xml" />
 
-	<target name="build.and.test" depends="init, init.checks, get.thirdparty, install.buckminster">
+	<target name="build.and.test" depends="init, init.checks, prepare.thirdparty, install.buckminster">
 		<echo message="Building" />
 		<ant dir="${basedir}/build" antfile="teneo_build.xml" target="run" inheritRefs="true" />
 
 		<antcall target="test" />
-		
+
 		<computeVersionQualifier directory="${rootPath}/output/org.eclipse.emf.teneo_${teneo.version}-osgi.bundle/jar" pattern="org.eclipse.emf.teneo*.jar"/>
 
 		<echo message="Creating maven jars with versionQualifier ${versionQualifier}" />
@@ -107,7 +111,7 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<teneo.maven name="org.eclipse.emf.teneo.hibernate.mapper"/>
 		<teneo.maven name="org.eclipse.emf.teneo.hibernate"/>
 	</target>
-	
+
 	<target name="test">
 		<echo message="Testing" />
 		<ant dir="${basedir}/test" antfile="teneo_test.xml" target="run" inheritRefs="true" />
@@ -122,7 +126,7 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<mkdir dir="${promoteUpdateSite}"/>
 		<mkdir dir="${promoteUpdateSite}/plugins"/>
 		<mkdir dir="${promoteUpdateSite}/features"/>
-		
+
 		<copy todir="${promoteUpdateSite}">
 			<fileset dir="${buildSitePath}">
 				<include name="**/*" />
@@ -132,7 +136,7 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 
 		<mkdir dir="${promoteDropsLocation}"/>
 		<mkdir dir="${promoteDropsLocation}/${teneo.version}"/>
-		<mkdir dir="${promoteDropsLocation}/${teneo.version}/${build.type}${buildTimestamp}"/>		
+		<mkdir dir="${promoteDropsLocation}/${teneo.version}/${build.type}${buildTimestamp}"/>
 		<copy todir="${promoteDropsLocation}/${teneo.version}/${build.type}${buildTimestamp}">
 			<fileset dir="${buildZipsPath}">
 				<include name="*.zip" />
@@ -150,6 +154,7 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 	</target>
 
 	<target name="init.checks" depends="init.clean.tools">
+		<echo message="Use remote: ${useRemote}" />
 		<available file="${toolsPath}/director/director" property="director.exists" />
 		<available file="${toolsPath}/buckminster/buckminster" property="buckminster.exists" />
 		<available file="${thirdPartyPath}/site.xml" property="thirdparty.exists" />
@@ -185,10 +190,13 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<available file="${thirdPartyPath}/site.xml" property="thirdparty.exists" />
 
 		<echo message="Using eclipse download: ${eclipse.download}"/>
-		
+
 	</target>
 
-	<target name="get.director" unless="director.exists">
+	<target name="prepare.director" depends="get.director, extract.director" unless="director.exists">
+	</target>
+
+	<target name="get.director" if="${useRemote}">
 		<echo message="Fetching headless director application" />
 		<tempfile destdir="${java.io.tmpdir}" prefix="director-" suffix=".zip" property="director.zip" deleteonexit="true" />
 		<get src="${director.url}" dest="${director.zip}" />
@@ -197,7 +205,16 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<delete file="${director.zip}" />
 	</target>
 
-	<target name="get.thirdparty" unless="thirdparty.exists">
+	<target name="extract.director" unless="${useRemote}">
+		<echo message="Extracting headless director from ${director.local.zip}" />
+		<mkdir dir="${toolsPath}" />
+		<unzip src="${director.local.zip}" dest="${toolsPath}" />
+	</target>
+
+	<target name="prepare.thirdparty" depends="get.thirdparty, extract.thirdparty" unless="thirdparty.exists">
+	</target>
+
+	<target name="get.thirdparty" if="${useRemote}">
 		<echo message="Fetching thirdparty files" />
 		<tempfile destdir="${java.io.tmpdir}" prefix="thirdparty-" suffix=".zip" property="thirdparty.zip" deleteonexit="true" />
 		<get src="${thirdparty.url}" dest="${thirdparty.zip}" />
@@ -206,14 +223,30 @@ http://dev.eclipse.org/viewsvn/index.cgi/trunk/org.eclipse.buckminster.releng/bu
 		<delete file="${thirdparty.zip}" />
 	</target>
 
-	<target name="install.buckminster" unless="buckminster.exists" depends="get.director">
+	<target name="extract.thirdparty" unless="${useRemote}">
+		<echo message="Extracting thirdparty from ${thirdparty.local.zip}" />
+		<mkdir dir="${thirdPartyPath}" />
+		<unzip src="${thirdparty.local.zip}" dest="${thirdPartyPath}" />
+	</target>
+
+	<target name="extract.buckminster" unless="${useRemote}" depends="prepare.director">
+		<mkdir dir="${buckminster.temp.root}/update" />
+		<echo message="Extracting local buckminster update site from ${buckminster.local.zip} to ${buckminster.temp.root}/update" />
+		<unzip src="${buckminster.local.zip}" dest="${buckminster.temp.root}/update" />
+	</target>
+
+	<target name="install.buckminster" unless="buckminster.exists" depends="prepare.director, extract.buckminster">
 		<echo message="Configuring headless buckminster with needed features" />
+		<condition property="buckminster.update.site" value="${buckminster.p2.site}" else="file://${buckminster.temp.root}/update">
+			<istrue value="${useRemote}"/>
+		</condition>
+		<echo message="Installing buckminster from update site: ${buckminster.update.site}" />
 		<eclipse.launch app="director">
 			<args>
 				<jvmarg value="-Declipse.p2.mirrors=false" />
 				<!--jvmarg value="-Dorg.eclipse.update.jarprocessor.pack200=${org.eclipse.update.jarprocessor.pack200}" /-->
 				<arg value="-r" />
-				<arg value="${buckminster.p2.site}" />
+				<arg value="${buckminster.update.site}" />
 				<arg value="-d" />
 				<arg value="${toolsPath}/buckminster" />
 				<arg value="-p" />
